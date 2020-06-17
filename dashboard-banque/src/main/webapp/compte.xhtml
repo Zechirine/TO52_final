@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="metadata">
+        <ui:param name="title" value=" Compte client"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. -->
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+
+        </style>
+    </ui:define>
+
+    <ui:define name="description">
+        Recherche er creation de compte
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form id="tableForm">
+            <p:growl id="growl" showDetail="true" sticky="true" />  
+            <div class="box box-primary">
+                <div class="box-header with-border">
+
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-sm-12 ui-g-2">
+                            <p:inputText id="client" value="#{compteMbean.rechNom}" placeholder="Nom du client"
+                                         style="width: 100%" required="true" requiredMessage="Le nom est obligatoire">
+
+                                <p:ajax event="change"  update="client" />
+                            </p:inputText>
+                            <span class="help-block">
+                                    <p:message for="client"/>
+                                </span>
+                        </div>
+                        <div class="ui-sm-12 ui-g-1">
+                        <p:commandButton  actionListener="#{compteMbean.clientAllCompte}" icon="fa fa-search" update="clientcompteTable"
+                                            value="Rechercher" styleClass="btn-primary" />
+                        <p:spacer width="5"/>
+                        </div>
+
+
+                    </div>
+
+
+
+                    <p:separator/>
+
+                    <p:fieldset legend="Comptes" style="margin-bottom:20px">
+                        <p:commandButton onclick="PF('nvoCompte').show()" icon="fa fa-plus" update="clientcompteTable"
+                                          value="Nouveau compte" styleClass="btn-primary" />
+                        <p:spacer width="5"/>
+                    <p:dataTable var="cpt" value="#{compteMbean.comptesClient}" id="clientcompteTable">
+
+                        <p:column headerText="Code " sortBy="#{cpt.codeCompte}" filterBy="#{cpt.codeCompte}" >
+                            <h:outputText value="#{cpt.codeCompte}" />
+                        </p:column>
+
+                        <p:column headerText="Date création" sortBy="#{cpt.dateCreation}" filterBy="#{cpt.dateCreation}" >
+                            <h:outputText value="#{cpt.dateCreation}" >
+                                <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Solde" sortBy="#{cpt.solde}"  >
+                            <h:outputText value="#{cpt.solde} €"  >
+                                <f:convertNumber pattern="#0.00" locale="pt_FR"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                    </p:fieldset>
+                </div>
+            </div>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger box-solid">
+                <p:commandButton value="Yes" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes"
+                                 icon="fa fa-check"/>
+                <p:commandButton value="No" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no"
+                                 icon="fa fa-close"/>
+            </p:confirmDialog>
+        </h:form>
+
+
+
+        <p:dialog header="Création de compte " widgetVar="nvoCompte" height="650"
+                  width="600" responsive="true" styleClass="box-success">
+            <h:form id="compteForm">
+                <p:panel id="basic" header="Informations compte " styleClass="box-primary card"  style="margin-bottom:20px">
+                    <f:facet name="header">
+                        <p:messages id="msgs" />
+                    </f:facet>
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-sm-12 ui-g-12 ui-g-nopad"> 
+                            <div class="ui-sm-12 ui-g-11">
+                                <p:outputLabel for="type" value="Type de compte">
+                                   
+                                </p:outputLabel>
+                            </div>
+                            <div class="ui-sm-12 ui-g-11">
+                                <p:selectOneButton id="type" value="#{compteMbean.typeCompte}">
+                                    <f:selectItem itemLabel="Courant" itemValue="C" />
+                                    <f:selectItem itemLabel="Epargne" itemValue="E" />
+                                    <p:ajax event="change"  update="type codecpt"  listener="#{compteMbean.showCode}" />
+                                </p:selectOneButton>
+                                <span class="help-block">
+                                    <p:message for="type"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-sm-12 ui-g-12 ui-g-nopad">
+                            <div class="ui-sm-12 ui-g-11">
+                                <p:outputLabel for="codecpt" value="Code compte"/>
+                            </div>
+                            <div class="ui-sm-12 ui-g-11">
+                                <p:inputText id="codecpt" value="#{compteMbean.codeCompte}"  readonly = "true"
+                                             style="width: 100%" required="true" >
+                                    <p:ajax event="change"  update="date" />
+                                </p:inputText>
+                                <span class="help-block">
+                                    <p:message for="codecpt"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-sm-12 ui-g-12 ui-g-nopad"> 
+                            <div class="ui-sm-12 ui-g-11">
+                                <p:outputLabel for="date" value="Date de création"/>
+                            </div>
+                            <div class="ui-sm-12 ui-g-11">
+                                <p:inputText id="date" value="#{compteMbean.dateCreation}"  readonly = "true"
+                                             style="width: 100%" required="true" >
+                                        <p:ajax event="change"  update="date" />
+                                    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                                </p:inputText>
+                                    <span class="help-block">
+                                    <p:message for="date"/>
+                                </span>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-sm-12 ui-g-12 ui-g-nopad"> 
+                            <div class="ui-sm-12 ui-g-11">
+                                <p:outputLabel for="solde" value="Solde initial"/>
+                            </div>
+                            <div class="ui-sm-12 ui-g-11">
+                                <p:inputNumber id="solde" value="#{compteMbean.solde}">
+                                <p:ajax event="change"  update="solde" />
+                            </p:inputNumber>
+                            <span class="help-block">
+                                    <p:message for="solde"/>
+                                </span>
+                            </div>
+                        </div> 
+                    </div>
+                </p:panel>
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton immediate="true" process="@this" update=":compteForm,:tableForm:clientcompteTable" actionListener ="#{compteMbean.save}" oncomplete="PF('nvoCompte').hide()" value="Créer" styleClass="btn-primary"  style="margin-left:  200px;" >
+                            <f:ajax render=":compteForm :tab"  />
+                            <p:resetInput target="@form" /> 
+                        </p:commandButton>
+
+                    </f:facet>
+
+                </p:toolbar>
+            </h:form>
+        </p:dialog>
+
+
+
+    </ui:define>
+
+</ui:composition>

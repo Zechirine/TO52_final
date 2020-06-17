@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="head-end">
+        <ui:param name="renderBreadCrumb" value="false"/>
+    </ui:define>
+
+    <ui:define name="title">
+
+        <div class="row">
+            <div class="col-lg-3 col-6">
+               
+                        <div class="small-box bg-info pink_background">
+                            <div class="inner">
+                                <h3>#{dashboardMbean.countClient}</h3>
+
+                                <p>Clients</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fa fa-user"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">Nouveau </a>
+                        </div>
+                <!-- small box -->
+
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success bleu_background">
+                    <div class="inner">
+                        <h3>#{dashboardMbean.countDepot}<sup style="font-size: 20px"></sup></h3>
+
+                        <p>Dépôts</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa  fa-sort-amount-asc"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">Faire un dépôt</a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning green_background ">
+                    <div class="inner">
+                        <h3>#{dashboardMbean.countRetrait}</h3>
+
+                        <p>Retraits</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-money"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">Faire un retrait </a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger orange_background">
+                    <div class="inner">
+                        <h3>#{dashboardMbean.countClient}</h3>
+
+                        <p>Virement</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-compress"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">Faire un virement </a>
+                </div>
+            </div>
+            <!-- ./col -->
+        </div>
+
+        <div>
+            <div>
+            <h3 style="color: black;">Opération récentes</h3>
+            </div>
+
+       <p:dataTable var="op" value="#{dashboardMbean.operations}" paginator="true" rows="5" sortMode="multiple" widgetVar="sesTable"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         rowsPerPageTemplate="5,10,15" selectionMode="single" id="sessTable" lazy="true">
+
+
+           <p:column   headerText="Client " sortBy="#{op.compte.client.nomClient}" filterBy="#{op.compte.client.nomClient}">
+               <h:outputText value="#{op.compte.client.nomClient}" />
+           </p:column>
+           <p:column   headerText="Date opération " sortBy="#{op.dateOperation}" filterBy="#{op.dateOperation}">
+               <h:outputText value="#{op.dateOperation}" >
+                   <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+               </h:outputText>
+           </p:column>
+           <p:column headerText="Montant" sortBy="#{op.montant}" filterBy="#{op.montant}" style="float: right" >
+               <h:outputText value="#{op.montant} €"  >
+                   <f:convertNumber pattern="#0.00" locale="pt_FR"/>
+               </h:outputText>
+           </p:column>
+           <p:column   headerText="Compte " sortBy="#{op.compte.codeCompte}" filterBy="#{op.compte.codeCompte}">
+               <h:outputText value="#{op.compte.codeCompte}" />
+           </p:column>
+           <p:column   headerText="Nouveau solde " sortBy="#{op.compte.solde}" filterBy="#{op.compte.solde}"  style="float: right">
+               <h:outputText value="#{op.compte.solde} €" >
+                   <f:convertNumber pattern="#0.00" locale="pt_FR"/>
+               </h:outputText>
+           </p:column>
+
+
+
+            </p:dataTable>
+
+
+
+        </div>
+    </ui:define>
+
+
+</ui:composition>

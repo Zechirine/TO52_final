@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+    <ui:define name="metadata">
+        <ui:param name="title" value="Opération"/> <!-- Automatic create breadCrumb and page title when param 'title' is provided. -->
+        <style type="text/css">
+            .ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+
+        </style>
+    </ui:define>
+
+    <ui:define name="description">
+        Faire une opération bancaire
+    </ui:define>
+
+    <ui:define name="body">
+        <h:form id="tableForm">
+            <p:growl id="growl" showDetail="true" sticky="true" />  
+            <div class="box box-primary">
+                <div class="box-header with-border">
+
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-sm-12 ui-g-2">
+                            <p:inputText id="client" value="#{operationMbean.rechNom}" placeholder="Nom du client"
+                                         style="width: 100%" required="true" requiredMessage="Le nom est obligatoire">
+
+                                <p:ajax event="change"  update="client" />
+                            </p:inputText>
+                            <span class="help-block">
+                                    <p:message for="client"/>
+                                </span>
+                        </div>
+                        <div class="ui-sm-12 ui-g-1">
+                        <p:commandButton  actionListener="#{operationMbean.clientAllCompte}" icon="fa fa-search" update="compte"
+                                            value="Rechercher" styleClass="btn-primary" />
+                        <p:spacer width="5"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-sm-12 ui-g-5">
+                            <p:selectOneMenu id="compte" value="#{operationMbean.selectedCompte}" style="width:125px" converter="omnifaces.SelectItemsConverter">
+                                <f:selectItem itemLabel="Sélectionner un compte" itemValue="" />
+                                <f:selectItems value="#{operationMbean.comptesClient}" itemValue ="#{cpt}"  itemLabel="#{cpt.codeCompte}" var="cpt"/>
+                                <p:ajax event="change"  update="solde" />
+                            </p:selectOneMenu>
+                            <span class="help-block">
+                                    <p:message for="compte"/>
+                                </span>
+                        </div>
+                        <div class="ui-sm-12 ui-g-1">
+                            <h:outputText  value="Solde #{operationMbean.selectedCompte.solde}" id="solde" style="background : yellow;"/>
+
+                        </div>
+
+                    </div>
+
+
+                    <p:separator/>
+
+                    <p:fieldset legend="Opération" style="margin-bottom:20px">
+                        <p:tabView>
+                        <p:tab title="Dépôt">
+                            <div class="ui-g ui-fluid">
+                                <div class="ui-sm-12 ui-g-1">
+                                    <p:outputLabel for="montantd" value="Montant" />
+                                </div>
+                                <div class="ui-sm-12 ui-g-2">
+                                    <p:inputNumber id="montantd" value="#{operationMbean.montantDepot}">
+                                        <p:ajax event="change"  update="montantd" />
+                                    </p:inputNumber>
+                                    <span class="help-block">
+                                    <p:message for="montantd"/>
+                                </span>
+                                </div>
+                                <div class="ui-sm-12 ui-g-2">
+                                    <h:outputText  value="Nouveau solde #{operationMbean.nvoSolde}" id="nvosoldes" style="background : yellow;"/>
+                                </div>
+
+                            </div>
+                            <div class="ui-g ui-fluid">
+                                <div class="ui-sm-12 ui-g-1">
+
+                                </div>
+                            <div class="ui-sm-12 ui-g-2">
+                        <p:commandButton  actionListener="#{operationMbean.depot}" update="nvosoldes"
+                                          value="Valider" styleClass="btn-primary" />
+                            </div>
+                            </div>
+                        <p:spacer width="5"/>
+                        </p:tab>
+                        <p:tab title="Retrait">
+                            <div class="ui-g ui-fluid">
+                                <div class="ui-sm-12 ui-g-1">
+                                    <p:outputLabel for="montant" value="Montant" />
+                                </div>
+                                <div class="ui-sm-12 ui-g-2">
+                                    <p:inputNumber id="montant" value="#{operationMbean.montantRetrait}">
+                                        <p:ajax event="change"  update="montant" />
+                                    </p:inputNumber>
+                                    <span class="help-block">
+                                    <p:message for="montant"/>
+                                </span>
+                                </div>
+                                <div class="ui-sm-12 ui-g-2">
+                                    <h:outputText  value="Nouveau solde #{operationMbean.nvoSolde}" id="nvosolde" style="background : yellow;"/>
+                                </div>
+
+                            </div>
+                            <div class="ui-g ui-fluid">
+                                <div class="ui-sm-12 ui-g-1">
+
+                                </div>
+                            <div class="ui-sm-12 ui-g-2">
+                                <p:commandButton  actionListener="#{operationMbean.retrait}" update="nvosolde"
+                                                  value="Valider" styleClass="btn-primary" />
+                            </div>
+                            </div>
+                        </p:tab>
+                        </p:tabView>
+                    </p:fieldset>
+                </div>
+            </div>
+        </h:form>
+
+
+
+
+
+
+
+    </ui:define>
+
+</ui:composition>
